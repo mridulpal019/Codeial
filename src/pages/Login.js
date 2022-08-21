@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styles from '../styles/login.module.css';
 import {useToasts } from "react-toast-notifications";
 import { useAuth } from '../hooks';
+import { Navigate} from 'react-router-dom';
 
 const Login = () => {
     const { addToast } = useToasts();
@@ -33,39 +34,45 @@ const Login = () => {
         }
           setLoggingIn(false);
     }
-  return (
-    <form className={styles.loginForm} onSubmit={handleSubmit}>
-      <span className={styles.loginSignupHeader}>Log In</span>
+    if (auth.user){
+      return <Navigate to='/'/>
 
-      <div className={styles.field}>
-        <input
-          type="email"
-          placeholder="Email"
-          required
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-          }}
-        />
-      </div>
+    }
+  
+      return (
+        <form className={styles.loginForm} onSubmit={handleSubmit}>
+          <span className={styles.loginSignupHeader}>Log In</span>
 
-      <div className={styles.field}>
-        <input
-          type="password"
-          placeholder="Password"
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
+          <div className={styles.field}>
+            <input
+              type="email"
+              placeholder="Email"
+              required
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+            />
+          </div>
 
-      <div className={styles.field}>
-        <button disabled={loggingIn}>
-          {loggingIn ? 'Logging in...' : 'Log in'}
-        </button>
-      </div>
-    </form>
-  );
+          <div className={styles.field}>
+            <input
+              type="password"
+              placeholder="Password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <button disabled={loggingIn}>
+              {loggingIn ? 'Logging in...' : 'Log in'}
+            </button>
+          </div>
+        </form>
+      );
+    
 };
 
 export default Login;
