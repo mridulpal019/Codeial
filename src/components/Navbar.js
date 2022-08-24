@@ -1,8 +1,28 @@
 import styles from '../styles/navbar.module.css';
-import {Link} from "react-router-dom"
+import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks';
+import { useEffect, useState } from 'react';
+import { searchUsers } from '../api';
 const Navbar = () => {
-    const auth=useAuth();
+  const [results, setResults] = useState([]);
+  const [searchText, setSearchText] = useState('');
+  const auth = useAuth();
+
+  useEffect(()=>{
+       const fetchUsers=async()=>{
+           const response=await searchUsers(searchText);
+           if(response.success){
+            setResults(response.data.users);
+
+           }
+       };
+       if (searchText.length >2){
+   fetchUsers();
+       }else{
+        setResults([]);
+       }
+    
+  },[searchText])
 
   return (
     <div className={styles.nav}>
@@ -13,6 +33,35 @@ const Navbar = () => {
             src="https://ninjasfiles.s3.amazonaws.com/0000000000003454.png"
           />
         </Link>
+      </div>
+      <div className={styles.searchContainer}>
+        <img className={styles.searchIcon} src="" alt="se" />
+        <input
+          placeholder="Search USers"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
+        {results.length > 0 && (
+          <div className={styles.searchResults}>
+            <ul>
+              {results.map((user) => (
+                <li
+                  className={styles.searchResultsRow}
+                  key={`user-${user._id}`}
+                >
+                  <Link to={`/user/${user._id}`}>
+                    <img
+                      src="https://image.flaticon.com/icons/svg/2154/2154651.svg"
+                      alt=""
+                      className={styles.userDp}
+                    />
+                    <span>{user.name}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
 
       <div className={styles.rightNav}>

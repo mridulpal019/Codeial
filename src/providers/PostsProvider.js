@@ -3,7 +3,8 @@ import { useProvidePosts} from '../hooks';
 const initialState = {
   posts: null,
   loading:true,
-  addPostToState:()=>{}
+  addPostToState:()=>{},
+  addCommnet:()=>{}
 };
 
 export const PostsContext = createContext(initialState);
